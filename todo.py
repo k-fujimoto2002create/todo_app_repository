@@ -1,15 +1,22 @@
 def add() :
     newtask = input("新しいタスクを入力してください：")
-    newdict = {"task":newtask, "comp":False}
+    while True :
+        priority = input("優先度を入力してください（低・中・高）：")
+        if priority == "低" or priority == "中" or priority == "高" :
+            break
+        else :
+            print("低・中・高のいずれかで入力してください")
+            continue
+    newdict = {"task":newtask, "priority":priority, "comp":False}
     return newdict
 
 def display(datalist) :
     if datalist :
         for i, data in enumerate(datalist, 1) :
             if data["comp"] :
-                print(f"★ {i}. {data["task"]}")
+                print(f"★ {i}. {data["task"]} [{data["priority"]}]")
             else :
-                print(f"{i}. {data["task"]}")
+                print(f"{i}. {data["task"]} [{data["priority"]}]")
     else :
         print("データがありません。先にデータを読み込むか、新たに作成してください")
 
@@ -59,7 +66,7 @@ def save(datalist) :
     file = "todo_list.txt"
     with open(file, "wt", encoding="utf-8") as fileobj :
         for data in datalist :
-            fileobj.write(f"{data["task"]},{int(data["comp"])}\n")
+            fileobj.write(f"{data["task"]},{data["priority"]},{int(data["comp"])}\n")
 
 def load(datalist) :
     file = "todo_list.txt"
@@ -70,8 +77,9 @@ def load(datalist) :
             if aline :
                 data = aline.split(",")
                 task = data[0]
-                comp = bool(int(data[1]))
-                datadict = {"task":task, "comp":comp}
+                priority = data[1]
+                comp = bool(int(data[2]))
+                datadict = {"task":task, "priority":priority, "comp":comp}
                 datalist.append(datadict)
             else :
                 break                
