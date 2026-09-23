@@ -1,22 +1,31 @@
 def add() :
+    categorylist = ["仕事", "勉強", "生活", "その他"]
+    prioritylist = ["低", "中", "高"]
     newtask = input("新しいタスクを入力してください：")
     while True :
         priority = input("優先度を入力してください（低・中・高）：")
-        if priority == "低" or priority == "中" or priority == "高" :
+        if priority in prioritylist :
             break
         else :
-            print("低・中・高のいずれかで入力してください")
+            print("低・中・高の中から選んでください")
             continue
-    newdict = {"task":newtask, "priority":priority, "comp":False}
+    while True :
+        category = input("カテゴリーを入力してください（仕事・勉強・生活・その他）：")
+        if category in categorylist :
+            break
+        else :
+            print("仕事・勉強・生活・その他の中から選んでください")
+            continue
+    newdict = {"task":newtask, "priority":priority, "category":category, "comp":False}
     return newdict
 
 def display(datalist) :
     if datalist :
         for i, data in enumerate(datalist, 1) :
             if data["comp"] :
-                print(f"★ {i}. {data["task"]} [{data["priority"]}]")
+                print(f"★ {i}. {data["task"]} [{data["priority"]}] [{data["category"]}]")
             else :
-                print(f"{i}. {data["task"]} [{data["priority"]}]")
+                print(f"{i}. {data["task"]} [{data["priority"]}] [{data["category"]}]")
     else :
         print("データがありません。先にデータを読み込むか、新たに作成してください")
 
@@ -66,7 +75,7 @@ def save(datalist) :
     file = "todo_list.txt"
     with open(file, "wt", encoding="utf-8") as fileobj :
         for data in datalist :
-            fileobj.write(f"{data["task"]},{data["priority"]},{int(data["comp"])}\n")
+            fileobj.write(f"{data["task"]},{data["priority"]},{data["category"]},{int(data["comp"])}\n")
 
 def load(datalist) :
     file = "todo_list.txt"
@@ -78,8 +87,9 @@ def load(datalist) :
                 data = aline.split(",")
                 task = data[0]
                 priority = data[1]
-                comp = bool(int(data[2]))
-                datadict = {"task":task, "priority":priority, "comp":comp}
+                category = data[2]
+                comp = bool(int(data[3]))
+                datadict = {"task":task, "priority":priority, "category":category, "comp":comp}
                 datalist.append(datadict)
             else :
                 break                
