@@ -1,6 +1,7 @@
+categorylist = ["仕事", "勉強", "生活", "その他"]
+prioritylist = ["低", "中", "高"]
+
 def add() :
-    categorylist = ["仕事", "勉強", "生活", "その他"]
-    prioritylist = ["低", "中", "高"]
     newtask = input("新しいタスクを入力してください：")
     while True :
         priority = input("優先度を入力してください（低・中・高）：")
@@ -21,6 +22,7 @@ def add() :
 
 def display(datalist) :
     if datalist :
+        print("--- タスク一覧 ---")
         for i, data in enumerate(datalist, 1) :
             if data["comp"] :
                 print(f"★ {i}. {data["task"]} [{data["priority"]}] [{data["category"]}]")
@@ -96,3 +98,42 @@ def load(datalist) :
 
 def terminate() :
     print("終了しました。")
+
+def edit(datalist) :
+    while True :
+        display(datalist)
+        num = input("編集するタスク番号：")
+        try:
+            index = int(num) - 1
+            if index <= len(datalist) - 1 :
+                data = datalist[index]
+                comp = data["comp"]
+                print("--- タスク編集 ---")
+                print(f"現在のタスク名：{data["task"]}")
+                newtask = input("新しいタスク名：")
+                while True :
+                    print(f"現在の優先度:{data["priority"]}")
+                    priority = input("新しい優先度（低・中・高）：")
+                    if priority in prioritylist :
+                        break
+                    else :
+                        print("低・中・高の中から選んでください")
+                        continue
+                while True :
+                    print(f"現在のカテゴリー：{data["category"]}")
+                    category = input("新しいカテゴリー（仕事・勉強・生活・その他）：")
+                    if category in categorylist :
+                        break
+                    else :
+                        print("仕事・勉強・生活・その他の中から選んでください")
+                        continue
+            else :
+                print("正しい番号を入力してください")
+                continue
+            newdict = {"task":newtask, "priority":priority, "category":category, "comp":comp}
+            datalist[index] = newdict
+            print("タスクを更新しました")
+            break
+        except ValueError :
+            print("半角数字で入力してください")
+            continue
